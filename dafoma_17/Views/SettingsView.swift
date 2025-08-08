@@ -71,13 +71,6 @@ struct SettingsView: View {
     private var generalSettingsSection: some View {
         SettingsSection(title: "General") {
             VStack(spacing: 12) {
-                SettingsRow(
-                    icon: "globe",
-                    title: "Units",
-                    subtitle: settingsViewModel.settings.general.units.displayName,
-                    action: { }
-                )
-                
                 SettingsToggleRow(
                     icon: "hand.raised.fill",
                     title: "Haptic Feedback",
@@ -147,20 +140,6 @@ struct SettingsView: View {
                             settingsViewModel.saveSettings()
                         }
                     )
-                )
-                
-                SettingsRow(
-                    icon: "location.fill",
-                    title: "GPS Accuracy",
-                    subtitle: settingsViewModel.settings.workout.gpsAccuracy.displayName,
-                    action: { }
-                )
-                
-                SettingsRow(
-                    icon: "heart.fill",
-                    title: "Heart Rate Zones",
-                    subtitle: "Configure your training zones",
-                    action: { }
                 )
                 
                 SettingsToggleRow(
@@ -240,25 +219,6 @@ struct SettingsView: View {
     private var displaySection: some View {
         SettingsSection(title: "Display & Appearance") {
             VStack(spacing: 12) {
-                SettingsRow(
-                    icon: "paintbrush.fill",
-                    title: "Theme",
-                    subtitle: settingsViewModel.settings.display.theme.displayName,
-                    action: { }
-                )
-                
-                SettingsRow(
-                    icon: "circle.fill",
-                    title: "Accent Color",
-                    subtitle: "Customize app colors",
-                    trailing: AnyView(
-                        Circle()
-                            .fill(settingsViewModel.accentColor)
-                            .frame(width: 24, height: 24)
-                    ),
-                    action: { }
-                )
-                
                 SettingsToggleRow(
                     icon: "moon.fill",
                     title: "Use System Theme",
@@ -270,13 +230,6 @@ struct SettingsView: View {
                             settingsViewModel.saveSettings()
                         }
                     )
-                )
-                
-                SettingsRow(
-                    icon: "textformat.size",
-                    title: "Font Size",
-                    subtitle: settingsViewModel.settings.display.fontSize.displayName,
-                    action: { }
                 )
                 
                 SettingsToggleRow(
@@ -329,13 +282,6 @@ struct SettingsView: View {
                     }
                 )
                 
-                SettingsRow(
-                    icon: "chart.pie.fill",
-                    title: "Storage Usage",
-                    subtitle: "\(settingsViewModel.storageUsed) of \(settingsViewModel.storageLimit) used",
-                    action: { }
-                )
-                
                 SettingsToggleRow(
                     icon: "hand.raised.fill",
                     title: "Share Analytics",
@@ -362,41 +308,6 @@ struct SettingsView: View {
                     action: {
                         showingAbout = true
                     }
-                )
-                
-                SettingsRow(
-                    icon: "questionmark.circle.fill",
-                    title: "Help & FAQ",
-                    subtitle: "Get help and find answers",
-                    action: { }
-                )
-                
-                SettingsRow(
-                    icon: "envelope.fill",
-                    title: "Contact Support",
-                    subtitle: "Get in touch with our team",
-                    action: { }
-                )
-                
-                SettingsRow(
-                    icon: "star.fill",
-                    title: "Rate the App",
-                    subtitle: "Share your feedback",
-                    action: { }
-                )
-                
-                SettingsRow(
-                    icon: "doc.text.fill",
-                    title: "Privacy Policy",
-                    subtitle: "How we protect your data",
-                    action: { }
-                )
-                
-                SettingsRow(
-                    icon: "doc.fill",
-                    title: "Terms of Service",
-                    subtitle: "App usage terms",
-                    action: { }
                 )
             }
         }

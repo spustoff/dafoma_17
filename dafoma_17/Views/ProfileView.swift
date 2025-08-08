@@ -1072,25 +1072,7 @@ struct EditProfileView: View {
                         .font(.system(size: 40))
                         .foregroundColor(.white)
                 }
-                
-                // Camera icon for changing photo
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Image(systemName: "camera.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .background(Color.black.opacity(0.6))
-                            .clipShape(Circle())
-                    }
-                }
-                .frame(width: 100, height: 100)
             }
-            
-            Text("Tap to change photo")
-                .font(.caption)
-                .foregroundColor(.white.opacity(0.7))
         }
     }
     
